@@ -1,10 +1,6 @@
 # Big data playground: Zeppelin
 
-[![Docker Build](https://img.shields.io/docker/cloud/build/panovvv/zeppelin-bigdata.svg)](https://cloud.docker.com/repository/docker/panovvv/zeppelin-bigdata/builds)
-[![Docker Pulls](https://img.shields.io/docker/pulls/panovvv/zeppelin-bigdata.svg)](https://hub.docker.com/r/panovvv/zeppelin-bigdata)
-[![Docker Stars](https://img.shields.io/docker/stars/panovvv/zeppelin-bigdata.svg)](https://hub.docker.com/r/panovvv/zeppelin-bigdata)
-
-Zeppelin Docker image built on top of Hadoop+Hive+Spark
+Zeppelin Docker image built on top of **[hadoop-hive-hbase-spark-docker](https://github.com/lschampion/hadoop-hive-hbase-spark-docker)**
 
 ## Software
 
@@ -12,8 +8,12 @@ Zeppelin Docker image built on top of Hadoop+Hive+Spark
 
 ## Usage
 
-Take a look [at this repo](https://github.com/panovvv/bigdata-docker-compose)
+Take a look [at this repo](https://github.com/lschampion/bigdata-docker-compose)
 to see how I use it as a part of a Docker Compose cluster.
+
+`.conf/interpreter.json` 
+
+store datasoure and interpreter config
 
 ## Maintaining
 
