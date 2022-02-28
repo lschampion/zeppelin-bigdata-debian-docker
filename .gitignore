@@ -1,7 +1,2 @@
-# OS garbage
-.DS_Store
-desktop.ini
-
-
-# IDE garbage
 .idea/
+tar-source-files/*
