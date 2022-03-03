@@ -1,12 +1,14 @@
-FROM lisacumt/hadoop-hive-hbase-spark-docker:1.0.5 as env_package
+FROM lisacumt/bigdata_base_env_img:1.1.1 as env_package
 
+# https://github.com/hadolint/hadolint/wiki/DL4006
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV ZEPPELIN_VERSION=0.9.0
 ENV ZEPPELIN_HOME=/usr/program/zeppelin
 ENV ZEPPELIN_PACKAGE="zeppelin-${ZEPPELIN_VERSION}-bin-all.tgz"
 ENV PATH="${PATH}:${ZEPPELIN_HOME}/bin"
 ENV MASTER=yarn-client
-ENV ZEPPELIN_CONF_DIR "${ZEPPELIN_HOME}/conf"
+ENV ZEPPELIN_CONF_DIR="${ZEPPELIN_HOME}/conf"
 ENV ZEPPELIN_ADDR=0.0.0.0
 ENV ZEPPELIN_PORT=8890
 ENV ZEPPELIN_NOTEBOOK_DIR="/zeppelin_notebooks"
@@ -14,9 +16,6 @@ ENV ZEPPELIN_NOTEBOOK_DIR="/zeppelin_notebooks"
 
 ###########################################################################################
 FROM env_package as application_package
-
-# https://github.com/hadolint/hadolint/wiki/DL4006
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 ENV USR_PROGRAM_DIR=/usr/program
 ENV USR_BIN_DIR="${USR_PROGRAM_DIR}/source_dir"
@@ -35,11 +34,10 @@ RUN if [ ! -f "${ZEPPELIN_PACKAGE}" ]; then curl --progress-bar -L --retry 3 \
 	&& tar -xf "${ZEPPELIN_PACKAGE}" -C "${USR_PROGRAM_DIR}" \
     && mv "${USR_PROGRAM_DIR}/zeppelin-${ZEPPELIN_VERSION}-bin-all" "${ZEPPELIN_HOME}" \
     && chown -R root:root "${ZEPPELIN_HOME}" \
-    && cp "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc" \
     && rm -rf "${USR_PROGRAM_DIR}/source_dir/*"
 
-
 COPY conf/interpreter.json "${ZEPPELIN_CONF_DIR}"
+COPY jdbc_drivers/* "${ZEPPELIN_HOME}/interpreter/jdbc"/
 
 # Clean up
 RUN rm -rf "${ZEPPELIN_HOME}/interpreter/alluxio" \
@@ -49,7 +47,7 @@ RUN rm -rf "${ZEPPELIN_HOME}/interpreter/alluxio" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/elasticsearch" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/flink" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/groovy" \
-#    && rm -rf "${ZEPPELIN_HOME}/interpreter/hbase" \
+    && rm -rf "${ZEPPELIN_HOME}/interpreter/hbase" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/ignite" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/kylin" \
     && rm -rf "${ZEPPELIN_HOME}/interpreter/lens" \
@@ -60,8 +58,14 @@ RUN rm -rf "${ZEPPELIN_HOME}/interpreter/alluxio" \
 
 ###########################################################################################
 FROM env_package 
-
 COPY --from=application_package "${ZEPPELIN_HOME}"/ "${ZEPPELIN_HOME}"/
+
+RUN mkdir -p "${HADOOP_CONF_DIR}" && mkdir -p "${HIVE_CONF_DIR}" && mkdir -p "${HBASE_CONF_DIR}" && mkdir -p "${SPARK_CONF_DIR}"
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HIVE_HOME}"/ "${HIVE_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.1 "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc"/
 
 HEALTHCHECK CMD curl -f "http://host.docker.internal:${ZEPPELIN_PORT}/" || exit 1
 
