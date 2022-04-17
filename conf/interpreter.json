@@ -1370,9 +1370,14 @@
           "value": "spark-packages,http://dl.bintray.com/spark-packages/maven,false;",
           "type": "textarea"
         },
-        "master": {
-          "name": "master",
-          "value": "yarn-client",
+        "spark.master": {
+          "name": "spark.master",
+          "value": "yarn",
+          "type": "string"
+        },
+		"spark.submit.deployMode": {
+          "name": "spark.submit.deployMode",
+          "value": "client",
           "type": "string"
         },
         "zeppelin.pyspark.python": {
