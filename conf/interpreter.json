@@ -500,7 +500,7 @@
       "properties": {
         "zeppelin.livy.url": {
           "name": "zeppelin.livy.url",
-          "value": "http://livy:8998",
+          "value": "http://master:8998",
           "type": "url",
           "description": "The URL for Livy Server."
         },

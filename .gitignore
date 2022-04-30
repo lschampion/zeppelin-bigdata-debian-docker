@@ -1,2 +1,4 @@
 .idea/
 tar-source-files/*
+# do not ignore source file list for refering later,不排除原始文件记录表，以后build时候文件列表可以参考
+!file_list.txt

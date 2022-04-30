@@ -1,4 +1,4 @@
-FROM lisacumt/bigdata_base_env_img:1.1.3 as env_package
+FROM lisacumt/bigdata_base_env_img:1.1.6 as env_package
 
 # https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -63,13 +63,13 @@ FROM env_package
 COPY --from=application_package "${ZEPPELIN_HOME}"/ "${ZEPPELIN_HOME}"/
 
 RUN mkdir -p "${HADOOP_CONF_DIR}" && mkdir -p "${HIVE_CONF_DIR}" && mkdir -p "${HBASE_CONF_DIR}" && mkdir -p "${SPARK_CONF_DIR}" 
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HIVE_HOME}"/ "${HIVE_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${SPARK_HOME}"/ "${SPARK_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${TEZ_HOME}"/ "${TEZ_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${FLINK_HOME}"/ "${FLINK_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.3 "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${HIVE_HOME}"/ "${HIVE_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${TEZ_HOME}"/ "${TEZ_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${FLINK_HOME}"/ "${FLINK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-docker:1.1.6 "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc"/
 
 
 HEALTHCHECK CMD curl -f "http://host.docker.internal:${ZEPPELIN_PORT}/" || exit 1
