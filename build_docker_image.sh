@@ -8,4 +8,4 @@ for sfile in ${files}
 do 
     echo $sfile >> ./tar-source-files/file_list.txt
 done
-docker build -t lisacumt/zeppelin-bigdata-docker:$version .
+docker build -t lisacumt/zeppelin-bigdata-centos-docker:$version .

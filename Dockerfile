@@ -1,4 +1,4 @@
-FROM lisacumt/bigdata_base_env_img:1.1.6 as env_package
+FROM lisacumt/bigdata_base_env_centos_img:1.2.0 as env_package
 
 # https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
