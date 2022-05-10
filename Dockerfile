@@ -1,4 +1,4 @@
-FROM lisacumt/bigdata_base_env_centos_img:1.2.0 as env_package
+FROM lisacumt/bigdata-base-env-debian-img:1.3.0 as env_package
 
 # https://github.com/hadolint/hadolint/wiki/DL4006
 SHELL ["/bin/bash", "-o", "pipefail", "-c"]
@@ -63,13 +63,13 @@ FROM env_package
 COPY --from=application_package "${ZEPPELIN_HOME}"/ "${ZEPPELIN_HOME}"/
 
 RUN mkdir -p "${HADOOP_CONF_DIR}" && mkdir -p "${HIVE_CONF_DIR}" && mkdir -p "${HBASE_CONF_DIR}" && mkdir -p "${SPARK_CONF_DIR}" 
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${HIVE_HOME}"/ "${HIVE_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${SPARK_HOME}"/ "${SPARK_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${TEZ_HOME}"/ "${TEZ_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${FLINK_HOME}"/ "${FLINK_HOME}"/
-COPY --from=lisacumt/hadoop-hive-hbase-spark-centos-docker:1.2.0 "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${HBASE_CONF_DIR}"/ "${HBASE_CONF_DIR}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${HADOOP_HOME}"/ "${HADOOP_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${HIVE_HOME}"/ "${HIVE_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${SPARK_HOME}"/ "${SPARK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${TEZ_HOME}"/ "${TEZ_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${FLINK_HOME}"/ "${FLINK_HOME}"/
+COPY --from=lisacumt/hadoop-hive-hbase-spark-debian-docker:1.3.0 "${HIVE_HOME}/jdbc/hive-jdbc-${HIVE_VERSION}-standalone.jar" "${ZEPPELIN_HOME}/interpreter/jdbc"/
 
 
 HEALTHCHECK CMD curl -f "http://host.docker.internal:${ZEPPELIN_PORT}/" || exit 1
